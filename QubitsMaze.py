@@ -6,13 +6,13 @@ import torch.optim as optim
 from collections import deque
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
-import random
 import math
 import os
 
 # For the pop-out logs
 import tkinter as tk
 import tkinter.scrolledtext as st
+import secrets
 
 
 pygame.init()
@@ -90,8 +90,8 @@ def generate_random_maze(rows, cols):
     maze = [["1" for _ in range(cols)] for _ in range(rows)]
 
     # Carve with DFS
-    start_r = random.randrange(rows)
-    start_c = random.randrange(cols)
+    start_r = secrets.SystemRandom().randrange(rows)
+    start_c = secrets.SystemRandom().randrange(cols)
     maze[start_r][start_c] = "0"
     stack = [(start_r, start_c)]
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -99,7 +99,7 @@ def generate_random_maze(rows, cols):
     while stack:
         r, c = stack[-1]
         neighbors = []
-        random.shuffle(directions)
+        secrets.SystemRandom().shuffle(directions)
         for dr, dc in directions:
             nr, nc = r + 2 * dr, c + 2 * dc
             if 0 <= nr < rows and 0 <= nc < cols:
@@ -108,7 +108,7 @@ def generate_random_maze(rows, cols):
         if not neighbors:
             stack.pop()
         else:
-            dr, dc = random.choice(neighbors)
+            dr, dc = secrets.choice(neighbors)
             maze[r + dr][c + dc] = "0"
             maze[r + 2 * dr][c + 2 * dc] = "0"
             stack.append((r + 2 * dr, c + 2 * dc))
@@ -340,10 +340,10 @@ def do_one_step_for_pawn(pawn_idx):
     q0, q1, q2 = gate_net(s_tensor)
 
     # EPSILON exploration
-    if random.random() < EPSILON:
-        q0idx = random.randint(0, 1)
-        q1idx = random.randint(0, 1)
-        q2idx = random.randint(0, 1)
+    if secrets.SystemRandom().random() < EPSILON:
+        q0idx = secrets.SystemRandom().randint(0, 1)
+        q1idx = secrets.SystemRandom().randint(0, 1)
+        q2idx = secrets.SystemRandom().randint(0, 1)
     else:
         q0idx = torch.multinomial(q0, 1).item()
         q1idx = torch.multinomial(q1, 1).item()
